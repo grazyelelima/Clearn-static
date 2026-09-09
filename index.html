@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLearn — Visualizador de C</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">// <em>C</em>learn</div>
+  <button class="tab-btn on" id="tab-play" onclick="goPage('play',this)">⚡ Visualizador</button>
+  <button class="tab-btn" id="tab-lesson" onclick="goPage('lesson-view',this)" style="display:none">📖 <span id="tab-lesson-name">Lição</span></button>
+  <button class="tab-btn" onclick="goPage('lessons',this)">📚 Lições</button>
+</div>
+
+<div class="main">
+
+  <!-- VISUALIZADOR (playground de lições) -->
+  <div class="page on" id="pg-play">
+    <div class="code-col">
+      <div class="col-hdr">
+        <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+        <span id="file-name" style="color:var(--tx2)">← escolha uma lição</span>
+      </div>
+      <div class="editor-wrap">
+        <div class="line-nums" id="line-nums">1</div>
+        <textarea id="editor" readonly spellcheck="false" autocomplete="off"
+          onscroll="syncScroll()" placeholder="← Escolha uma lição no menu Lições"></textarea>
+        <div class="line-hl" id="line-hl"></div>
+      </div>
+      <div class="code-footer">
+        <span id="status-msg" style="color:var(--tx3)">Selecione uma lição</span>
+        <span class="step-hint" id="step-hint"></span>
+      </div>
+    </div>
+
+    <div class="viz-col">
+      <div class="prog-strip">
+        <span class="prog-lbl" id="prg-lbl">0 / 0</span>
+        <div class="prog-track"><div class="prog-fill" id="prg-fill" style="width:0%"></div></div>
+      </div>
+      <div class="exp-strip">
+        <div class="exp-tag" id="exp-tag">—</div>
+        <div class="exp-text" id="exp-text">Selecione uma lição e pressione ▶ Play</div>
+      </div>
+      <div class="viz-body">
+        <div class="stack-pane">
+          <div class="stack-hdr">📚 Call Stack <span class="stack-hdr-count" id="stack-count">0</span></div>
+          <div class="stack-list" id="stack-list">
+            <div class="stack-empty" id="stack-empty">Stack vazia<br><br>Execute um programa</div>
+          </div>
+        </div>
+        <div class="right-pane">
+          <div class="mem-out-body">
+
+            <!-- TERNARY -->
+            <div class="tern-section" id="lesson-tern-section">
+              <div class="sec-lbl">❓ Operador Ternário</div>
+              <div class="tern-box">
+                <div class="tern-expr">
+                  <span class="cond" id="tern-expr-cond">condição</span>
+                  <span style="color:var(--tx2)"> ? </span>
+                  <span class="qtrue" id="tern-expr-true">valor_verdadeiro</span>
+                  <span style="color:var(--tx2)"> : </span>
+                  <span class="qfalse" id="tern-expr-false">valor_falso</span>
+                </div>
+                <div class="tern-parts">
+                  <div class="tern-part cond-part" id="tern-cond">
+                    <div class="plbl">Condição</div>
+                    <div class="pval" id="tern-cond-val">—</div>
+                  </div>
+                  <div class="tern-part true-part" id="tern-true">
+                    <div class="plbl">✓ Se verdadeiro</div>
+                    <div class="pval" id="tern-true-val">—</div>
+                  </div>
+                  <div class="tern-part false-part" id="tern-false">
+                    <div class="plbl">✗ Se falso</div>
+                    <div class="pval" id="tern-false-val">—</div>
+                  </div>
+                </div>
+                <div class="tern-result" id="tern-result"></div>
+              </div>
+            </div>
+
+            <!-- MATRIX -->
+            <div class="matrix-section" id="lesson-matrix-section">
+              <div class="sec-lbl">🔲 Matriz 2D — mat[linha][coluna]</div>
+              <div class="matrix-wrap">
+                <div class="matrix-label">Laranja = linha (i) · Roxo = coluna (j) · Azul = célula atual · Verde = visitada</div>
+                <div id="mat-col-hdrs"></div>
+                <div id="mat-body"></div>
+              </div>
+            </div>
+
+            <!-- BRANCH -->
+            <div class="branch-section" id="branch-section">
+              <div class="sec-lbl" id="branch-lbl">🔀 Fluxo Condicional</div>
+              <div id="branch-svg-wrap">
+                <svg id="branch-svg" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#2a3347"/></marker>
+                    <marker id="arr-blue" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#4f9eff"/></marker>
+                    <marker id="arr-green" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#3ecf6c"/></marker>
+                    <marker id="arr-red" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#f06060"/></marker>
+                  </defs>
+                </svg>
+              </div>
+            </div>
+
+            <!-- RECURSION TREE -->
+            <div class="rec-section" id="rec-section">
+              <div class="sec-lbl">🌳 Árvore de Recursão — fat(5)</div>
+              <div id="rec-svg-wrap">
+                <svg id="rec-svg" viewBox="0 0 460 260" xmlns="http://www.w3.org/2000/svg"></svg>
+              </div>
+            </div>
+
+            <!-- SORT -->
+            <div class="sort-section" id="sort-section">
+              <div class="sec-lbl">Ordenação</div>
+              <div class="sort-arena" id="sort-arena"></div>
+              <div class="sort-legend">
+                <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>normal</div>
+                <div class="leg"><div class="leg-dot" style="background:var(--orange)"></div>comparando</div>
+                <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>trocando</div>
+                <div class="leg"><div class="leg-dot" style="background:var(--green)"></div>posição final</div>
+              </div>
+            </div>
+
+            <!-- MEMORY -->
+            <div id="mem-section" style="display:none">
+              <div class="sec-lbl">Memória — Stack</div>
+              <div class="mem-grid" id="mem-grid"></div>
+              <div id="ptr-area"></div>
+            </div>
+
+            <!-- OUTPUT -->
+            <div id="out-section" style="display:none">
+              <div class="sec-lbl">Saída</div>
+              <div class="out-box" id="out-box"><span class="out-prompt">$ ./main
+</span></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="ctrl-bar">
+        <button class="cbtn primary" id="playbtn" onclick="togglePlay()" disabled>▶ Play</button>
+        <button class="cbtn" id="prevbtn" onclick="stepBack()" disabled>← Anterior</button>
+        <button class="cbtn" id="nextbtn" onclick="stepFwd()" disabled>→ Próximo</button>
+        <button class="cbtn" id="resetbtn" onclick="resetPlay()" disabled>↺</button>
+        <div class="spd-wrap">
+          vel <input type="range" min="400" max="3000" step="100" value="1400" id="spd" oninput="updateSpeed()">
+          <span id="spd-lbl">1.4s</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIÇÕES -->
+  <div class="page" id="pg-lessons">
+    <div class="lessons-inner">
+      <div style="margin-bottom:.75rem">
+        <div style="font-size:1.05rem;font-weight:700;margin-bottom:.3rem">📚 Lições de C</div>
+        <div style="font-size:.76rem;color:var(--tx2)">Clique numa lição para ver a execução passo a passo com animações de memória e call stack.</div>
+      </div>
+      <div id="lesson-list"></div>
+    </div>
+  </div>
+
+</div><!-- main -->
+
+<script src="js/lessons.js"></script>
+<script src="js/engine.js"></script>
+</body>
+</html>
