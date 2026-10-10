@@ -27,6 +27,18 @@ A proposta une o melhor do **VisualGo** (animações de algoritmos) com o **Pyth
 | Estruturas | Arrays, Matrizes 2D, Ponteiros, Funções |
 | Avançado | Recursão — Fatorial |
 | Ordenação | Bubble Sort, Selection Sort, Insertion Sort |
+| Strings | Strings, Operação Substring, Inversão de Vetores |
+
+---
+
+## Estrutura Modular das Lições (`js/lessons/`)
+
+Para facilitar a manutenção e escalabilidade pedagógica, as lições são organizadas em 5 arquivos modulares:
+- `js/lessons/fundamentos.js` — Variáveis e tipos, laços (`for`, `while`, `do while`), condicionais (`if/else`, `switch/case`) e operador ternário.
+- `js/lessons/estrutura.js` — Arrays, ponteiros, funções e matrizes 2D.
+- `js/lessons/avancado.js` — Recursão com visualização dinâmica de call stack e árvore SVG.
+- `js/lessons/ordenacao.js` — Algoritmos de ordenação (*Bubble*, *Selection* e *Insertion Sort*).
+- `js/lessons/strings.js` — Fundamentos de `char[]`, terminador `\0`, operação de substring e inversão de vetores.
 
 ---
 
